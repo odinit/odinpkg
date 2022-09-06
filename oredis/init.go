@@ -11,7 +11,7 @@ var (
 )
 
 // Init 初始化连接
-func Init(host string, port int, db int, password string, opts ...*redis.Options) (client *redis.Client, err error) {
+func Init(host string, port, db int, password string, opts ...*redis.Options) (client *redis.Client, err error) {
 	opt := new(redis.Options)
 	if len(opts) != 0 {
 		opt = opts[0]
@@ -44,25 +44,6 @@ func ReplaceGlobal(client *redis.Client) {
 }
 
 func GlobalInit(host string, port int, db int, password string, opts ...*redis.Options) (err error) {
-	opt := new(redis.Options)
-	if len(opts) != 0 {
-		opt = opts[0]
-		if host != "" && port != 0 {
-			opt.Addr = fmt.Sprintf("%s:%d", host, port)
-		}
-		if db != 0 {
-			opt.DB = db
-		}
-		if password != "" {
-			opt.Password = password
-		}
-	} else {
-		opt.Addr = fmt.Sprintf("%s:%d", host, port)
-		opt.DB = db
-		opt.Password = password
-	}
-
-	Client = redis.NewClient(opt)
-	_, err = Client.Ping().Result()
+	Client, err = Init(host, port, db, password, opts...)
 	return
 }
