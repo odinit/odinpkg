@@ -87,20 +87,14 @@ var codeMsgMap = map[code]string{
 	ErrDocker: "docker相关异常",
 }
 
-type ResData = map[string]interface{}
+type ResData = map[string]any
 
-func NewResData(code code, data interface{}, extra ...map[string]interface{}) (resData ResData) {
-	resData = ResData{
+func NewRes(code code, msg string, data any) (resData ResData) {
+	return ResData{
 		"code": code,
-		"msg":  codeMsgMap[code],
+		"msg":  msg,
 		"data": data,
 	}
-	for i := range extra {
-		for k, v := range extra[i] {
-			resData[k] = v
-		}
-	}
-	return
 }
 
 func (c_ code) Return(c *gin.Context) {
@@ -112,7 +106,16 @@ func (c_ code) Return(c *gin.Context) {
 	c.JSON(http.StatusOK, resData)
 }
 
-func (c_ code) Extra(c *gin.Context, extra ...map[string]interface{}) {
+func (c_ code) ReturnBuild(c *gin.Context, msg string, data any) {
+	resData := ResData{
+		"code": c_,
+		"msg":  msg,
+		"data": data,
+	}
+	c.JSON(http.StatusOK, resData)
+}
+
+func (c_ code) Extra(c *gin.Context, extra ...map[string]any) {
 	resData := ResData{
 		"code": c_,
 		"msg":  codeMsgMap[c_],
@@ -126,7 +129,7 @@ func (c_ code) Extra(c *gin.Context, extra ...map[string]interface{}) {
 	c.JSON(http.StatusOK, resData)
 }
 
-func (c_ code) Data(c *gin.Context, data interface{}) {
+func (c_ code) Data(c *gin.Context, data any) {
 	c.JSON(http.StatusOK, ResData{
 		"code": c_,
 		"msg":  codeMsgMap[c_],
@@ -134,7 +137,7 @@ func (c_ code) Data(c *gin.Context, data interface{}) {
 	})
 }
 
-func (c_ code) DataExtra(c *gin.Context, data interface{}, extra ...map[string]interface{}) {
+func (c_ code) DataExtra(c *gin.Context, data any, extra ...map[string]any) {
 	resData := ResData{
 		"code": c_,
 		"msg":  codeMsgMap[c_],
@@ -156,7 +159,15 @@ func (c_ code) Msg(c *gin.Context, msg ...string) {
 	})
 }
 
-func (c_ code) MsgExtra(c *gin.Context, msg string, extra ...map[string]interface{}) {
+func (c_ code) Error(c *gin.Context, err error) {
+	c.JSON(http.StatusOK, ResData{
+		"code": c_,
+		"msg":  codeMsgMap[c_] + ": " + err.Error(),
+		"data": nil,
+	})
+}
+
+func (c_ code) MsgExtra(c *gin.Context, msg string, extra ...map[string]any) {
 	resData := ResData{
 		"code": c_,
 		"msg":  msg,
