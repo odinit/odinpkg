@@ -2,19 +2,19 @@
 初始化MySQL连接
 */
 
-package gmysql
+package omysql
 
 import (
 	"fmt"
-	"github.com/odinit/odinpkg/otype"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"odinpkg/otype"
 )
 
 var DB *gorm.DB
 
 func Init(host string, port int, user, password, dbname string, param otype.MSA, opts ...gorm.Option) (db *gorm.DB, err error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", user, password, host, port, dbname, otype.JoinMSA("=", "&"))
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", user, password, host, port, dbname, otype.JoinMSA(param, "=", "&"))
 
 	db, err = gorm.Open(
 		mysql.Open(dsn),

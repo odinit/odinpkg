@@ -1,4 +1,4 @@
-package glog
+package olog
 
 import (
 	"github.com/gin-gonic/gin"

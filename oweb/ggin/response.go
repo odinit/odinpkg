@@ -1,4 +1,4 @@
-package ggin
+package ogin
 
 import (
 	"github.com/gin-gonic/gin"

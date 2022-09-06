@@ -1,12 +1,12 @@
-package gfile
+package ofile
 
 import (
 	"bufio"
 	"errors"
-	"github.com/odinit/global/gtype"
 	"golang.org/x/exp/slices"
 	"io"
 	"io/fs"
+	"odinpkg/otype"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -26,7 +26,7 @@ func CountLines(p string, suffix ...string) (n int, err error) {
 		return
 	}
 
-	suffixUpper := gtype.SliceStringToUpper(suffix)
+	suffixUpper := otype.SliceStringToUpper(suffix)
 	if pState.IsDir() {
 		return countLinesInDir(p, suffixUpper...)
 	} else {

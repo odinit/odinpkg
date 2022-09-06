@@ -1,9 +1,8 @@
-package ggin
+package ogin
 
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/odinit/global/gweb"
 	"strings"
 )
 
@@ -26,5 +25,5 @@ func CheckUuid(u string) error {
 // ParseBody
 // 解析request body中的信息
 func ParseBody(c *gin.Context, req interface{}) (err error) {
-	return gweb.ReaderUnmarshal(c.Request.Body, req)
+	return oweb.ReaderUnmarshal(c.Request.Body, req)
 }

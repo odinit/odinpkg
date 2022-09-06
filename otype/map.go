@@ -1,4 +1,4 @@
-package gtype
+package otype
 
 import (
 	"fmt"

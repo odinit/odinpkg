@@ -1,4 +1,4 @@
-package gfile
+package ofile
 
 import (
 	"archive/zip"

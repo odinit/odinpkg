@@ -1,4 +1,4 @@
-package gvar
+package ovar
 
 import "errors"
 

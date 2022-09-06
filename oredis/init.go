@@ -1,4 +1,4 @@
-package gredis
+package oredis
 
 import (
 	"fmt"

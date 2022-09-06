@@ -1,4 +1,4 @@
-package gweb
+package oweb
 
 import (
 	"bytes"

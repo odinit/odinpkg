@@ -1,4 +1,4 @@
-package gutil
+package outil
 
 import "math"
 

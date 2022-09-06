@@ -1,4 +1,4 @@
-package gtype
+package otype
 
 func IntToBool(i int) bool {
 	if i <= 0 {

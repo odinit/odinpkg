@@ -1,1 +1,1 @@
-package gtype
+package otype
