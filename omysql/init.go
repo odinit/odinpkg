@@ -6,9 +6,9 @@ package omysql
 
 import (
 	"fmt"
+	"github.com/odinit/odinpkg/otype"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"odinpkg/otype"
 )
 
 var DB *gorm.DB

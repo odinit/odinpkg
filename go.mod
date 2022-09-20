@@ -1,4 +1,4 @@
-module odinpkg
+module github.com/odinit/odinpkg
 
 go 1.19
 
