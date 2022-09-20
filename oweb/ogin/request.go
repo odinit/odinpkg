@@ -3,7 +3,7 @@ package ogin
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/odinit/odinpkg/outil"
+	"odinpkg/outil"
 	"strings"
 )
 

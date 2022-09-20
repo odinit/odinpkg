@@ -10,7 +10,6 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/odinit/global v0.0.0-20220831032021-22d4295c0ce4
-	github.com/odinit/odinpkg v0.0.0-20220920003847-63212fd31a0c
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/spf13/viper v1.13.0
 	go.uber.org/zap v1.23.0
