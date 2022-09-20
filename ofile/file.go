@@ -6,7 +6,6 @@ import (
 	"golang.org/x/exp/slices"
 	"io"
 	"io/fs"
-	"odinpkg/otype"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -26,9 +25,8 @@ func CountLines(p string, suffix ...string) (n int, err error) {
 		return
 	}
 
-	suffixUpper := otype.SliceStringToUpper(suffix)
 	if pState.IsDir() {
-		return countLinesInDir(p, suffixUpper...)
+		return countLinesInDir(p, suffix...)
 	} else {
 		return countLinesInFile(p)
 	}
@@ -37,7 +35,7 @@ func CountLines(p string, suffix ...string) (n int, err error) {
 func countLinesInDir(p string, suffix ...string) (n int, err error) {
 	if len(suffix) == 0 {
 		err = filepath.WalkDir(p, func(p_ string, d fs.DirEntry, err error) error {
-			// 跳过文件夹/跳过文件名后缀不符合要求的文件/以.开头的文件
+			// 跳过文件夹/跳过以.开头的文件/这里忽略后缀的限制
 			if d.IsDir() || strings.Index(d.Name(), ".") == 0 {
 				return nil
 			}
@@ -52,8 +50,8 @@ func countLinesInDir(p string, suffix ...string) (n int, err error) {
 		})
 	} else {
 		err = filepath.WalkDir(p, func(p_ string, d fs.DirEntry, err error) error {
-			// 跳过文件夹/跳过文件名后缀不符合要求的文件/以.开头的文件
-			if d.IsDir() || !slices.Contains(suffix, strings.ToUpper(filepath.Ext(d.Name()))) || strings.Index(d.Name(), ".") == 0 {
+			// 跳过文件夹/跳过文件名后缀不符合要求的文件/跳过以.开头的文件
+			if d.IsDir() || !slices.Contains(suffix, filepath.Ext(d.Name())) || strings.Index(d.Name(), ".") == 0 {
 				return nil
 			}
 
@@ -67,20 +65,6 @@ func countLinesInDir(p string, suffix ...string) (n int, err error) {
 		})
 	}
 
-	//err = filepath.Walk(p, func(p_ string, info fs.FileInfo, err error) error {
-	//	// 跳过文件夹/跳过文件名后缀不符合要求的文件
-	//	if info.IsDir() || !slices.Contains(suffix, strings.ToUpper(filepath.Ext(info.Name()))) {
-	//		return nil
-	//	}
-	//
-	//	// 获取文件的行数
-	//	n_, err := countLinesInFile(p_)
-	//	if err != nil {
-	//		return err
-	//	}
-	//	n += n_
-	//	return nil
-	//})
 	return
 }
 
