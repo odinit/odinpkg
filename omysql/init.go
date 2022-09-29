@@ -13,25 +13,25 @@ import (
 
 var DB *gorm.DB
 
-func Init(host string, port int, user, password, dbname string, param map[string]any, opts ...gorm.Option) (db *gorm.DB, err error) {
+func Init(host string, port int, user, password, dbname string, param map[string]any, opt *gorm.Config) (db *gorm.DB, err error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", user, password, host, port, dbname, otype.JoinMSA(param, "=", "&"))
 
 	db, err = gorm.Open(
 		mysql.Open(dsn),
-		opts...,
+		opt,
 	)
 	return
 }
 
 func DefaultInit() (db *gorm.DB, err error) {
-	return Init("localhost", 3306, "root", "123456", "test", nil)
+	return Init("localhost", 3306, "root", "123456", "test", nil, nil)
 }
 
 func ReplaceGlobal(db *gorm.DB) {
 	DB = db
 }
 
-func GlobalInit(host string, port int, user, password, dbname string, param otype.MSA, opts ...gorm.Option) (err error) {
-	DB, err = Init(host, port, user, password, dbname, param, opts...)
+func GlobalInit(host string, port int, user, password, dbname string, param map[string]any, opt *gorm.Config) (err error) {
+	DB, err = Init(host, port, user, password, dbname, param, opt)
 	return
 }

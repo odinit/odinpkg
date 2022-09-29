@@ -5,17 +5,7 @@ import (
 	"strings"
 )
 
-type MSS = map[string]string
-type MSI = map[string]int
-type MSA = map[string]any
-type MIS = map[int]string
-type MII = map[int]int
-type MIA = map[int]any
-type MAS = map[any]string
-type MAI = map[any]int
-type MAA = map[any]any
-
-func JoinMSS(m MSS, sep1, sep2 string) (s string) {
+func JoinMSS(m map[string]string, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}
@@ -28,7 +18,7 @@ func JoinMSS(m MSS, sep1, sep2 string) (s string) {
 	return s[:len(s)-len(sep2)]
 }
 
-func JoinMSI(m MSI, sep1, sep2 string) (s string) {
+func JoinMSI(m map[string]int, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}
@@ -41,7 +31,7 @@ func JoinMSI(m MSI, sep1, sep2 string) (s string) {
 	return s[:len(s)-len(sep2)]
 }
 
-func JoinMSA(m MSA, sep1, sep2 string) (s string) {
+func JoinMSA(m map[string]any, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}
@@ -54,7 +44,7 @@ func JoinMSA(m MSA, sep1, sep2 string) (s string) {
 	return s[:len(s)-len(sep2)]
 }
 
-func JoinMIS(m MIS, sep1, sep2 string) (s string) {
+func JoinMIS(m map[int]string, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}
@@ -67,7 +57,7 @@ func JoinMIS(m MIS, sep1, sep2 string) (s string) {
 	return s[:len(s)-len(sep2)]
 }
 
-func JoinMII(m MII, sep1, sep2 string) (s string) {
+func JoinMII(m map[int]int, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}
@@ -80,7 +70,7 @@ func JoinMII(m MII, sep1, sep2 string) (s string) {
 	return s[:len(s)-len(sep2)]
 }
 
-func JoinMIA(m MIA, sep1, sep2 string) (s string) {
+func JoinMIA(m map[int]any, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}
@@ -93,7 +83,7 @@ func JoinMIA(m MIA, sep1, sep2 string) (s string) {
 	return s[:len(s)-len(sep2)]
 }
 
-func JoinMAS(m MAS, sep1, sep2 string) (s string) {
+func JoinMAS(m map[any]string, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}
@@ -106,7 +96,7 @@ func JoinMAS(m MAS, sep1, sep2 string) (s string) {
 	return s[:len(s)-len(sep2)]
 }
 
-func JoinMAI(m MAI, sep1, sep2 string) (s string) {
+func JoinMAI(m map[any]int, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}
@@ -119,7 +109,7 @@ func JoinMAI(m MAI, sep1, sep2 string) (s string) {
 	return s[:len(s)-len(sep2)]
 }
 
-func JoinMAA(m MAA, sep1, sep2 string) (s string) {
+func JoinMAA(m map[any]any, sep1, sep2 string) (s string) {
 	if len(m) == 0 {
 		return ""
 	}

@@ -3,10 +3,12 @@ package ofile
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"golang.org/x/exp/slices"
 	"io"
 	"io/fs"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -110,6 +112,107 @@ func FileSizeFormat(size int64) (s_ string) {
 					}
 				}
 			}
+		}
+	}
+
+	return
+}
+
+// ExtSum 获取给定路径下所有文件的扩展名列表
+func ExtSum(ps ...string) (exts []string, err error) {
+	if len(ps) == 0 {
+		ps = []string{"."}
+	}
+	var ext string
+	for _, p := range ps {
+		pInfo, err := os.Stat(p)
+		if err != nil {
+			fmt.Printf("%s 路径出错: %s", p, err.Error())
+			continue
+		}
+		if pInfo.IsDir() {
+			_ = filepath.Walk(p, func(p_ string, info fs.FileInfo, err error) error {
+				if info.IsDir() || strings.HasPrefix(info.Name(), ".") {
+					return nil
+				}
+				ext = filepath.Ext(info.Name())
+				if !slices.Contains(exts, ext) {
+					exts = append(exts, ext)
+				}
+				return nil
+			})
+		} else {
+			ext = filepath.Ext(path.Base(p))
+			if !slices.Contains(exts, ext) {
+				exts = append(exts, ext)
+			}
+		}
+	}
+	return
+}
+
+// DeleteByExt 通过扩展名删除给定路径下所有文件
+func DeleteByExt(p string, ext ...string) (err error) {
+	if len(ext) == 0 {
+		err = errors.New("请输入要删除的文件扩展名")
+		return
+	}
+	if p == "" {
+		p = "."
+	}
+
+	pInfo, err := os.Stat(p)
+	if err != nil {
+		fmt.Printf("%s 路径出错: %s", p, err.Error())
+		return
+	}
+	if pInfo.IsDir() {
+		err = filepath.Walk(p, func(p_ string, info fs.FileInfo, err error) error {
+			if info.IsDir() {
+				return nil
+			}
+			if slices.Contains(ext, filepath.Ext(p_)) {
+				return os.Remove(p_)
+			}
+			return nil
+		})
+	} else {
+		if slices.Contains(ext, filepath.Ext(p)) {
+			err = os.Remove(p)
+		}
+	}
+
+	return
+}
+
+// FindByExt 通过扩展名查找给定路径下所有文件
+func FindByExt(p string, ext ...string) (files []string, err error) {
+	if len(ext) == 0 {
+		err = errors.New("请输入要查找的文件扩展名")
+		return
+	}
+	if p == "" {
+		p = "."
+	}
+
+	pInfo, err := os.Stat(p)
+	if err != nil {
+		fmt.Printf("%s 路径出错: %s", p, err.Error())
+		return
+	}
+	if pInfo.IsDir() {
+		err = filepath.Walk(p, func(p_ string, info fs.FileInfo, err error) error {
+			if info.IsDir() {
+				return nil
+			}
+			if slices.Contains(ext, filepath.Ext(p_)) {
+				files = append(files, p_)
+			}
+			return nil
+		})
+	} else {
+		if slices.Contains(ext, filepath.Ext(p)) {
+			files = append(files, p)
 		}
 	}
 
