@@ -1,4 +1,4 @@
-package log
+package web
 
 import (
 	"github.com/gin-gonic/gin"
@@ -12,8 +12,8 @@ import (
 	"time"
 )
 
-// GinLogger 接收gin框架默认的日志
-func GinLogger() gin.HandlerFunc {
+// Ginlogger 接收gin框架默认的日志
+func Ginlogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 		path := c.Request.URL.Path
@@ -21,7 +21,7 @@ func GinLogger() gin.HandlerFunc {
 		c.Next()
 
 		cost := time.Since(start)
-		Logger.Info(path,
+		logger.Info(path,
 			zap.Int("status", c.Writer.Status()),
 			zap.String("method", c.Request.Method),
 			zap.String("path", path),
@@ -52,7 +52,7 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 
 				httpRequest, _ := httputil.DumpRequest(c.Request, false)
 				if brokenPipe {
-					Logger.Error(c.Request.URL.Path,
+					logger.Error(c.Request.URL.Path,
 						zap.Any("error", err),
 						zap.String("request", string(httpRequest)),
 					)
@@ -63,13 +63,13 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 				}
 
 				if stack {
-					Logger.Error("[Recovery from panic]",
+					logger.Error("[Recovery from panic]",
 						zap.Any("error", err),
 						zap.String("request", string(httpRequest)),
 						zap.String("stack", string(debug.Stack())),
 					)
 				} else {
-					Logger.Error("[Recovery from panic]",
+					logger.Error("[Recovery from panic]",
 						zap.Any("error", err),
 						zap.String("request", string(httpRequest)),
 					)
