@@ -1,4 +1,4 @@
-package global
+package top
 
 import (
 	"github.com/natefinch/lumberjack"
@@ -9,19 +9,23 @@ import (
 )
 
 var core = zapcore.NewNopCore()
-var logger = zap.NewNop()
+var Logger = zap.NewNop()
 
-func InitLog(logMode, logFilePath string) {
+func NewLogger(logMode, logFilePath string) *zap.Logger {
 	if slices.Contains([]string{"product", "prod", "pro"}, logMode) {
-		product(logFilePath)
-	} else if slices.Contains([]string{"develop", "dev"}, logMode) {
-		develop()
+		return product(logFilePath)
+	} else {
+		return develop()
 	}
+}
+
+func GlobalLog(logMode, logFilePath string) {
+	Logger = NewLogger(logMode, logFilePath)
 }
 
 // Develop 开发者模式
 // 日志仅输出到终端
-func develop() {
+func develop() *zap.Logger {
 	devConfig := zap.NewDevelopmentEncoderConfig()
 	devConfig.EncodeTime = zapcore.TimeEncoderOfLayout(DateFormat)
 
@@ -30,13 +34,12 @@ func develop() {
 		zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), zapcore.DebugLevel),
 	)
 
-	logger = zap.New(core, zap.AddCaller())
-	zap.ReplaceGlobals(logger)
+	return zap.New(core, zap.AddCaller())
 }
 
 // Product 生产者模式
 // 日志输出到文件
-func product(logFile string) {
+func product(logFile string) *zap.Logger {
 	proConfig := zap.NewProductionEncoderConfig()
 	proConfig.EncodeTime = zapcore.TimeEncoderOfLayout(DateFormat)
 	proConfig.TimeKey = "time"
@@ -59,6 +62,5 @@ func product(logFile string) {
 		})),
 	)
 
-	logger = zap.New(core, zap.AddCaller())
-	zap.ReplaceGlobals(logger)
+	return zap.New(core, zap.AddCaller())
 }

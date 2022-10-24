@@ -1,4 +1,4 @@
-package conf
+package top
 
 import (
 	"fmt"
@@ -6,10 +6,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Init 从配置文件中初始化配置信息
+// InitConfig 从配置文件中初始化配置信息
 // confPath:配置文件路径
 // conf:配置变量地址
-func Init(confPath string, confValue interface{}) (err error) {
+func InitConfig(confPath string, confValue interface{}) (err error) {
 	//viper.SetConfigType("yaml") //设置文件格式,不设置则通过扩展名判断
 
 	viper.SetConfigFile(confPath) // 设置参数文件路径
