@@ -1,4 +1,4 @@
-package ogin
+package ginutil
 
 import (
 	"errors"
