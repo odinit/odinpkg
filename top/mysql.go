@@ -21,6 +21,9 @@ func NewMySQLDB(host string, port int, user, password, dbname string, param map[
 }
 
 func GlobalMySQLDB(host string, port int, user, password, dbname string, param map[string]any, opt *gorm.Config) (err error) {
+	if opt == nil {
+		opt = &gorm.Config{}
+	}
 	db, err := NewMySQLDB(host, port, user, password, dbname, param, opt)
 	if err != nil {
 		MySQLDB = db
