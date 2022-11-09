@@ -2,6 +2,7 @@ package ginutil
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/unrolled/secure"
 	"go.uber.org/zap"
 	"net"
 	"net/http"
@@ -34,25 +35,23 @@ func CSRFMiddle(c *gin.Context) {
 }
 
 // GinLogger 接收gin框架默认的日志
-func GinLogger() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		start := time.Now()
-		path := c.Request.URL.Path
-		query := c.Request.URL.RawQuery
-		c.Next()
+func GinLogger(c *gin.Context) {
+	start := time.Now()
+	path := c.Request.URL.Path
+	query := c.Request.URL.RawQuery
+	c.Next()
 
-		cost := time.Since(start)
-		zap.L().Info(path,
-			zap.Int("status", c.Writer.Status()),
-			zap.String("method", c.Request.Method),
-			zap.String("path", path),
-			zap.String("query", query),
-			zap.String("ip", c.ClientIP()),
-			//zap.String("user-agent", c.Request.UserAgent()),
-			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
-			zap.Duration("cost", cost),
-		)
-	}
+	cost := time.Since(start)
+	zap.L().Info(path,
+		zap.Int("status", c.Writer.Status()),
+		zap.String("method", c.Request.Method),
+		zap.String("path", path),
+		zap.String("query", query),
+		zap.String("ip", c.ClientIP()),
+		//zap.String("user-agent", c.Request.UserAgent()),
+		zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
+		zap.Duration("cost", cost),
+	)
 }
 
 // GinRecovery recover掉项目可能出现的panic，并使用zap记录相关日志
@@ -100,4 +99,18 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 		}()
 		c.Next()
 	}
+}
+
+func TLSMiddleware(c *gin.Context) {
+	secureMiddleware := secure.New(secure.Options{
+		SSLRedirect: true,
+		SSLHost:     "localhost:8080",
+	})
+	err := secureMiddleware.Process(c.Writer, c.Request)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"err": err.Error()})
+		return
+	}
+
+	c.Next()
 }

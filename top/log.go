@@ -6,13 +6,14 @@ import (
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/exp/slices"
 	"os"
+	"strings"
 )
 
 var core = zapcore.NewNopCore()
 var Logger = zap.NewNop()
 
 func NewLogger(logMode, logFilePath string) *zap.Logger {
-	if slices.Contains([]string{"product", "prod", "pro"}, logMode) {
+	if slices.Contains([]string{"release", "product", "prod", "pro", "production"}, strings.ToLower(logMode)) {
 		return product(logFilePath)
 	} else {
 		return develop()
