@@ -2,34 +2,24 @@ package util
 
 import (
 	"github.com/google/uuid"
-	"os"
+	"io"
 	"text/template"
 )
 
-func TemplateParseFile(templateFilePath, targetFilePath string, data interface{}) (err error) {
-	tpl, err := template.ParseFiles(templateFilePath)
+func TemplateParseFile(tp string, wr io.Writer, data interface{}) (err error) {
+	tpl, err := template.ParseFiles(tp)
 	if err != nil {
 		return
 	}
-	targetFile, err := os.Open(targetFilePath)
-	if err != nil {
-		return
-	}
-	defer targetFile.Close()
 
-	return tpl.Execute(targetFile, data)
+	return tpl.Execute(wr, data)
 }
 
-func TemplateParseString(templateString, targetFilePath string, data interface{}) (err error) {
-	tpl, err := template.New(uuid.NewString()).Parse(templateString)
+func TemplateParseString(ts string, wr io.Writer, data interface{}) (err error) {
+	tpl, err := template.New(uuid.NewString()).Parse(ts)
 	if err != nil {
 		return
 	}
-	targetFile, err := os.Open(targetFilePath)
-	if err != nil {
-		return
-	}
-	defer targetFile.Close()
 
-	return tpl.Execute(targetFile, data)
+	return tpl.Execute(wr, data)
 }
