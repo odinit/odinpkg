@@ -13,21 +13,29 @@ import (
 
 var MySQLDB *gorm.DB
 
-func NewMySQLDB(host string, port int, user, password, dbname string, param map[string]any, opt *gorm.Config) (db *gorm.DB, err error) {
-	return gorm.Open(
-		mysql.Open(DSN(host, port, user, password, dbname, param)),
-		opt,
-	)
-}
-
-func GlobalMySQLDB(host string, port int, user, password, dbname string, param map[string]any, opt *gorm.Config) (err error) {
+func NewMySQLDB(host string, port int, user, password, dbname string, param map[string]any, opt *gorm.Config, tb ...interface{}) (db *gorm.DB, err error) {
 	if opt == nil {
 		opt = &gorm.Config{}
 	}
-	db, err := NewMySQLDB(host, port, user, password, dbname, param, opt)
+	db, err = gorm.Open(
+		mysql.Open(DSN(host, port, user, password, dbname, param)),
+		opt,
+	)
 	if err != nil {
-		MySQLDB = db
+		return
 	}
+	if len(tb) != 0 {
+		err = db.AutoMigrate(tb...)
+	}
+	return
+}
+
+func GlobalMySQLDB(host string, port int, user, password, dbname string, param map[string]any, opt *gorm.Config, tb ...interface{}) (err error) {
+	db, err := NewMySQLDB(host, port, user, password, dbname, param, opt, tb...)
+	if err != nil {
+		return err
+	}
+	MySQLDB = db
 	return
 }
 
