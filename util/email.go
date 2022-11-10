@@ -6,13 +6,13 @@ import (
 )
 
 const (
-	smtp163server = "smtp.163.com"
-	smtp163port   = 25
+	Smtp163Server = "smtp.163.com"
+	Smtp163Port   = 25
 )
 
 type Email struct {
 	Dialer   *gomail.Dialer
-	Host     string
+	Server   string
 	Port     int
 	From     string
 	Name     string
@@ -55,13 +55,13 @@ func (e *Email) NewDialer() (err error) {
 	if err != nil {
 		return
 	}
-	e.Dialer = gomail.NewDialer(e.Host, e.Port, e.From, e.Password)
+	e.Dialer = gomail.NewDialer(e.Server, e.Port, e.From, e.Password)
 	return nil
 }
 
 func (e *Email) Check() error {
-	if e.Host == "" {
-		e.Host = "127.0.0.1"
+	if e.Server == "" {
+		e.Server = "127.0.0.1"
 	}
 	if e.Port == 0 {
 		e.Port = 465
@@ -113,15 +113,15 @@ func (e *Email) SetBody() {
 	}
 }
 
-func NewEmail(host string, port int) *Email {
+func NewEmail(server string, port int) *Email {
 	e := &Email{
-		Host: host,
-		Port: port,
+		Server: server,
+		Port:   port,
 	}
 	e.Message = gomail.NewMessage()
 	return e
 }
 
 func New163Email() *Email {
-	return NewEmail(smtp163server, smtp163port)
+	return NewEmail(Smtp163Server, Smtp163Port)
 }
