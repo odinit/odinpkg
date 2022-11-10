@@ -86,6 +86,7 @@ func (e *Email) SetHeader() {
 	if e.Header != nil {
 		e.Message.SetHeaders(e.Header)
 	}
+	e.Message.SetHeader("To", e.To...)
 }
 
 func (e *Email) SetAddressHeader() {
