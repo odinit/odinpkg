@@ -10,21 +10,6 @@ const (
 	smtp163port   = 25
 )
 
-func EmailNew() *Email {
-	e := &Email{}
-	e.Message = gomail.NewMessage()
-	return e
-}
-
-func EmailNew163() *Email {
-	e := &Email{
-		Host: smtp163server,
-		Port: smtp163port,
-	}
-	e.Message = gomail.NewMessage()
-	return e
-}
-
 type Email struct {
 	Dialer   *gomail.Dialer
 	Host     string
@@ -126,4 +111,17 @@ func (e *Email) SetBody() {
 		}
 		e.Message.SetBody(e.ContentType, e.Body)
 	}
+}
+
+func NewEmail(host string, port int) *Email {
+	e := &Email{
+		Host: host,
+		Port: port,
+	}
+	e.Message = gomail.NewMessage()
+	return e
+}
+
+func New163Email() *Email {
+	return NewEmail(smtp163server, smtp163port)
 }
