@@ -3,7 +3,7 @@ package ginutil
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/odinit/odinpkg/util"
+	"github.com/odinit/odinpkg/odinutil"
 	"strings"
 )
 
@@ -26,5 +26,5 @@ func CheckUuid(u string) error {
 // ParseBody
 // 解析request body中的信息
 func ParseBody(c *gin.Context, req interface{}) (err error) {
-	return util.ReaderUnmarshal(c.Request.Body, req)
+	return odinutil.ReaderUnmarshal(c.Request.Body, req)
 }

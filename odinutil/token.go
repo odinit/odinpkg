@@ -1,4 +1,4 @@
-package util
+package odinutil
 
 import (
 	"errors"
