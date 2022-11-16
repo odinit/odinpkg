@@ -10,7 +10,8 @@ import (
 )
 
 var core = zapcore.NewNopCore()
-var Logger = zap.NewNop()
+var Logger *zap.Logger
+var SLogger *zap.SugaredLogger
 
 func NewLogger(logMode, logFilePath string) *zap.Logger {
 	if slices.Contains([]string{"release", "product", "prod", "pro", "production"}, strings.ToLower(logMode)) {
@@ -22,9 +23,10 @@ func NewLogger(logMode, logFilePath string) *zap.Logger {
 
 func GlobalLog(logMode, logFilePath string) {
 	Logger = NewLogger(logMode, logFilePath)
+	SLogger = Logger.Sugar()
 }
 
-// Develop 开发者模式
+// develop 开发者模式
 // 日志仅输出到终端
 func develop() *zap.Logger {
 	devConfig := zap.NewDevelopmentEncoderConfig()
@@ -38,7 +40,7 @@ func develop() *zap.Logger {
 	return zap.New(core, zap.AddCaller())
 }
 
-// Product 生产者模式
+// product 生产者模式
 // 日志输出到文件
 func product(logFile string) *zap.Logger {
 	proConfig := zap.NewProductionEncoderConfig()
