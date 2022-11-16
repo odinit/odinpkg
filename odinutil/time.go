@@ -1,0 +1,6 @@
+package odinutil
+
+
+func TimeStamp(){
+
+}

@@ -48,7 +48,7 @@ func product(logFile string) *zap.Logger {
 	proConfig.EncodeDuration = zapcore.SecondsDurationEncoder
 	proConfig.EncodeCaller = zapcore.ShortCallerEncoder
 
-	consoleEncoder := zapcore.NewConsoleEncoder(proConfig)
+	consoleEncoder := zapcore.NewJSONEncoder(proConfig)
 	logWriter := zapcore.AddSync(&lumberjack.Logger{
 		Filename:   logFile, //Filename: 日志文件的位置
 		MaxSize:    10,      //MaxSize：在进行切割之前，日志文件的最大大小（以MB为单位）
